@@ -27,7 +27,7 @@ services:
 
   cvat:
     container_name: cvat
-    image: openvino/cvat_server
+    image: sfastdocker/cvat_server:2.1.0
     restart: always
     depends_on:
       - cvat_redis
@@ -55,7 +55,7 @@ services:
 
   cvat_ui:
     container_name: cvat_ui
-    image: openvino/cvat_ui
+    image: sfastdocker/cvat_ui:2.1.0
     restart: always
     depends_on:
       - cvat
@@ -66,6 +66,7 @@ services:
       - traefik.http.routers.cvat-ui.entrypoints=web
     networks:
       - cvat
+    command: ["sh", "-c", "until $$(curl --connect-timeout 2 -o /dev/null -s -I -f http://cvat:8080/api/restrictions/user-agreements); do echo cvat not started; sleep 2; done; echo cvat started; nginx -g 'daemon off;';"]
 
   traefik:
     image: traefik:v2.4
@@ -86,6 +87,7 @@ services:
     #   - traefik.http.routers.dashboard.rule=Host(`${CVAT_HOST:-localhost}`)
     ports:
       - 8080:8080
+      - 8082:80
       - 8090:8090
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

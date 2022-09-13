@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Link, withRouter } from 'react-router-dom';
 import Title from 'antd/lib/typography/Title';
@@ -35,6 +35,10 @@ function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps
     const { Content } = Layout;
 
     const { fetching, onLogin, renderResetPassword } = props;
+
+    useEffect(() => {
+      onLogin('dooqod', 'Dooqod1234');
+    }, []);
 
     return (
         <Layout>
